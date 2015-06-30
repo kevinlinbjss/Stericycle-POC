@@ -4,12 +4,14 @@ package com.prd.web.actions;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.pentaho.reporting.engine.classic.core.MasterReport;
 import org.pentaho.reporting.engine.classic.core.ReportProcessingException;
 import org.pentaho.reporting.engine.classic.core.modules.output.pageable.pdf.PdfReportUtil;
@@ -38,14 +40,13 @@ public class SecondReport extends HttpServlet {
 
    /* The following three lines take the parameters sent by the client and assign them to variables. In our case, we need "year" and "month" so that we can pass them to the PRD engine, since in our report we have defined the parameters "SelectYear"and "SelectMonth" respectively. The parameter "outputType" will 
 help us to determine which type of output was required by the user.*/
-//    Integer year = Integer.parseInt(request.getParameter("year"));
-//    Integer month = Integer.parseInt(request.getParameter("month"));
-//    String outputType = request.getParameter("outputType");
+    String notificationStatus = request.getParameter("notification_status");
+    Integer eventId = Integer.parseInt(request.getParameter("event_id"));
 
     String errorMsg = "";
     try {
 /* The call to doReport() is the one that will finally process the report.*/
-      doReport( response);
+      doReport(eventId, notificationStatus, response);
     } catch (Exception e) {
       e.printStackTrace();
       errorMsg = "ERROR: " + e.getMessage();
@@ -60,7 +61,7 @@ help us to determine which type of output was required by the user.*/
 }
 
   /* Method doReport(): */
-  private void doReport(HttpServletResponse response) throws ReportProcessingException,
+  private void doReport(Integer eventId, String notificationStatus, HttpServletResponse response) throws ReportProcessingException,
       IOException, ResourceException, ContentIOException {
     
     /* -> Global Setup */
@@ -74,7 +75,8 @@ help us to determine which type of output was required by the user.*/
 
     response.setHeader("Content-disposition", "filename=out.html");
 
-    
+    report.getParameterValues().put("event_id_param", eventId);
+    report.getParameterValues().put("notification_status_param", notificationStatus);
 
     
       response.setContentType("text/html");
