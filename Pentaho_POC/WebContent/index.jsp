@@ -8,10 +8,7 @@
 "<body onload="config()">", in this way we will have access to every element in the DOM. -->
 <script type="text/javascript">
   function config() {
-    var errMsg = document.getElementById("errorMsg");
-    if ("${errorMsg}".length == 0)
-      errMsg.setAttribute('class', 'hide');
-
+    
     var button = document.getElementById("btnRunReport");
     button.addEventListener("click", function(event) {
 	    	event.preventDefault();  
